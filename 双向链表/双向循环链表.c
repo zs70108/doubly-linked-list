@@ -56,7 +56,7 @@ struct eq_list
 };
 
 /* 初始化双向链表 */
-struct eq_list* InitDLink(eq_huanqiu_t data)
+static struct eq_list* InitDLink(eq_huanqiu_t data)
 {
     struct eq_list* head = (struct eq_list*)malloc(sizeof(struct eq_list));
     if (head != NULL) 
