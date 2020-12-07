@@ -6,7 +6,7 @@
  * 
  * 2. InsertDLink(struct eq_list* head, eq_huanqiu_t data)
  * 插入数据，如果链表未建立则初始化链表，返回链表首地址
- * 如果数据重复则返回重复数据所在元素地址，不重复返回创建元素地址
+ * 如果有数据则返回链表首地址
  * 出错返回NULL
  * 
  * 3. DeleteDLink(struct eq_list* head, eq_huanqiu_t deleteData)
@@ -22,6 +22,7 @@
  * 
  * 注：使用 malloc 函数注意当前系统
  * 如果在FREERTOS里需要使用 pvPortMalloc 从 TOTAL_HEAP_SIZE 中申请内存
+ * 释放从vPortFree里释放
  *
  * 作者：Joseph Zhang
  * 日期：2020-12-04
@@ -137,7 +138,7 @@ struct eq_list* InsertDLink(struct eq_list* head, eq_huanqiu_t data)
     if ((ptr = SelectDLink(head, data)) != NULL)
     {
         printf("重复数据\r\n");
-        return(ptr);
+        return(head);
     }
     struct eq_list* node = (struct eq_list*)malloc(sizeof(struct eq_list));
     if (node != NULL) 
@@ -148,7 +149,7 @@ struct eq_list* InsertDLink(struct eq_list* head, eq_huanqiu_t data)
         head->prior->next = node;
         head->prior = node;
         AbEquipQTY++;
-        return(node);
+        return(head);
     }
     return(NULL);
 }
@@ -238,22 +239,13 @@ int main()
     eqtest.loop = 0x01;
     eqtest.point = 0x02;
     struct eq_list* head =NULL;
-    if(AbEquipQTY == 0)
-        head = InsertDLink(head, eqtest);
-    //InsertDLink(head, eqtest);
-    //eqtest.point = 0x03;
-    //InsertDLink(head, eqtest);
-    //eqtest.point = 0x04;
-    //InsertDLink(head, eqtest);
-    //DisplayDLink(head);
-    //eqtest.point = 0x05;
+    head = InsertDLink(head, eqtest);
     DisplayDLink(head);
     head = DeleteDLink(head, eqtest);
     DisplayDLink(head);
-    if (AbEquipQTY == 0)
-        head = InsertDLink(head, eqtest);
+    head = InsertDLink(head, eqtest);
     eqtest.point = 0x03;
-    InsertDLink(head, eqtest);
+    head = InsertDLink(head, eqtest);
     DisplayDLink(head);
     head = DestoryDLink(head);
     DisplayDLink(head);
